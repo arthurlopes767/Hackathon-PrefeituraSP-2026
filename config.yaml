@@ -1,0 +1,84 @@
+# =============================================================================
+# config.yaml — Camada de Configuração
+# -----------------------------------------------------------------------------
+# Mantido pela equipe técnica e versionado no repositório.
+# NÃO deve ser editado diretamente pelo usuário final (Prefeitura) através do
+# dashboard — apenas os pesos do AHP são ajustáveis ao vivo, via sliders no
+# Streamlit, para simulação de cenários (os sliders não alteram este arquivo).
+# =============================================================================
+
+# --- Delimitação da SMZ (Surface Moisture Zone) -----------------------------
+smz:
+  # Limiar (T) aplicado sobre o P90 do NDVI de cada célula de 30m.
+  # Células cujo P90 > T passam a compor a SMZ do cluster.
+  ndvi_threshold_T: 0.50
+
+# --- Definição de mês de estiagem --------------------------------------------
+estiagem:
+  # Um mês é considerado de estiagem quando a precipitação mensal (INMET)
+  # fica abaixo deste limite (mm).
+  precipitacao_limite_mm: 50
+
+# --- Anos de referência ENSO (El Niño / La Niña) -----------------------------
+enso:
+  anos_el_nino:  [2014, 2015, 2018, 2023]
+  anos_la_nina:  [2016, 2017, 2020, 2021, 2022]
+  # Os demais anos da série são tratados como "neutros" e usados como
+  # linha de base para o cálculo de ΔNDVI.
+
+# --- Bloco 3 (Governança) -----------------------------------------------------
+governanca:
+  # Desativado neste protótipo: não há acesso aos shapefiles do Programa
+  # Mananciais, PSA Mananciais e APP-OIDA 2026. O AHP roda apenas com os
+  # Blocos 1 e 2. Quando os shapefiles estiverem disponíveis, basta:
+  #   1) setar incluir_bloco_3: true
+  #   2) fornecer os caminhos em governanca.shapefiles
+  #   3) redistribuir os pesos em ahp.pesos_default
+  incluir_bloco_3: false
+  tratamento_sobreposicao: "aumenta_prioridade"  # resolve a ambiguidade de
+                                                   # "complementaridade" citada
+                                                   # no projeto; não utilizado
+                                                   # enquanto o bloco estiver
+                                                   # desativado.
+  shapefiles:
+    programa_mananciais: null
+    psa_mananciais: null
+    app_oida_2026: null
+
+# --- Pesos default do AHP -----------------------------------------------------
+# Ajustáveis ao vivo pelo usuário no dashboard (sliders). Estes são apenas
+# os valores iniciais/default carregados na abertura do app.
+ahp:
+  pesos_default:
+    resiliencia_hidrologica: 0.6
+    uso_solo_socioeconomico: 0.4
+    governanca: 0.0   # bloco desativado no protótipo — mantido em 0
+
+# --- Faixas de classificação (Baixa / Média / Alta) por indicador -----------
+# Conforme especificado no Apêndice A e nos parâmetros fornecidos pela equipe.
+classificacao:
+  ndvi_estiagem:
+    baixa_max: 0.40
+    media_max: 0.52          # Alta: > 0.52
+
+  ndvi_p90:
+    baixa:  [0.40, 0.44]
+    media:  [0.45, 0.54]
+    alta:   [0.55, 0.60]
+
+  # Indicadores contínuos normalizados por min-max (I = (X-Xmin)/(Xmax-Xmin))
+  # e classificados na mesma escala 0-1: Baixa (0-0.33) / Média (>0.33-0.66) /
+  # Alta (>0.66-1.00). Aplica-se a: taxa de impermeabilização, sobreposição
+  # com APP, distância de áreas urbanizadas e IPVS.
+  #
+  # OBS. sobre "Distância de áreas urbanizadas": o documento do projeto pedia
+  # pesquisa de uma faixa de classificação específica. Não foi encontrada uma
+  # convenção setorial própria para esse indicador nas fontes citadas
+  # (GeoSampa/MapBiomas/Google Earth); por consistência metodológica com os
+  # demais indicadores normalizados do Bloco 2 (que seguem todos a mesma regra
+  # 0-0.33/0.33-0.66/0.66-1.00 após normalização), adotou-se a mesma faixa
+  # padrão aqui. Ajuste este valor se a equipe técnica definir um critério
+  # próprio.
+  normalizado_padrao:
+    baixa_max: 0.33
+    media_max: 0.66
