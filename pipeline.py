@@ -1,5 +1,5 @@
 """
-pipeline.py — Pré-processamento espacial, cálculo de indicadores,
+Pré-processamento espacial, cálculo de indicadores,
 modelagem (PCA + AHP) e persistência em GeoJSON.
 
 Implementa as camadas descritas na arquitetura:
@@ -9,9 +9,10 @@ Implementa as camadas descritas na arquitetura:
     Hidrológica; normalização + ponderação direta no Bloco 2; AHP final)
   - Armazenamento em GeoJSON
 
-O Bloco 3 (Governança) é omitido neste protótipo por falta de acesso aos
-shapefiles oficiais (Programa Mananciais / PSA Mananciais / APP-OIDA 2026),
-conforme indicado em config.yaml (`governanca.incluir_bloco_3: false`).
+O Bloco 3 (Instrumentos de Gestão Territorial Preexistentes) é omitido neste 
+protótipo por falta de acesso aos shapefiles oficiais (Programa Mananciais / 
+PSA Mananciais / APP-OIDA 2026), conforme indicado em config.yaml 
+(`instrumentos_de_gestao_territorial.incluir_bloco_3: false`).
 """
 
 from __future__ import annotations
@@ -246,7 +247,7 @@ def rodar_pipeline(df_nascentes: pd.DataFrame, cfg: dict) -> pd.DataFrame:
 
 def aplicar_ahp(df: pd.DataFrame, peso_resiliencia: float,
                  peso_uso_solo: float) -> pd.DataFrame:
-    """Combina os blocos via AHP. Bloco 3 (Governança) está desativado neste
+    """Combina os blocos via AHP. Bloco 3 (Instrumentos de Gestão Territorial Preexistentes) está desativado neste
     protótipo, então a soma dos pesos usados é normalizada entre os dois
     blocos disponíveis."""
     soma = peso_resiliencia + peso_uso_solo

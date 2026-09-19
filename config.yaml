@@ -1,5 +1,5 @@
 # =============================================================================
-# config.yaml — Camada de Configuração
+# Camada de Configuração
 # -----------------------------------------------------------------------------
 # Mantido pela equipe técnica e versionado no repositório.
 # NÃO deve ser editado diretamente pelo usuário final (Prefeitura) através do
@@ -26,13 +26,13 @@ enso:
   # Os demais anos da série são tratados como "neutros" e usados como
   # linha de base para o cálculo de ΔNDVI.
 
-# --- Bloco 3 (Governança) -----------------------------------------------------
-governanca:
+# --- Bloco 3 (Instrumentos de Gestão Territorial Preexistentes) -----------------------------------------------------
+instrumentos_de_gestao_territorial:
   # Desativado neste protótipo: não há acesso aos shapefiles do Programa
   # Mananciais, PSA Mananciais e APP-OIDA 2026. O AHP roda apenas com os
   # Blocos 1 e 2. Quando os shapefiles estiverem disponíveis, basta:
   #   1) setar incluir_bloco_3: true
-  #   2) fornecer os caminhos em governanca.shapefiles
+  #   2) fornecer os caminhos em instrumentos_de_gestao_territorial.shapefiles
   #   3) redistribuir os pesos em ahp.pesos_default
   incluir_bloco_3: false
   tratamento_sobreposicao: "aumenta_prioridade"  # resolve a ambiguidade de
@@ -52,7 +52,7 @@ ahp:
   pesos_default:
     resiliencia_hidrologica: 0.6
     uso_solo_socioeconomico: 0.4
-    governanca: 0.0   # bloco desativado no protótipo — mantido em 0
+    instrumentos_de_gestao_territorial: 0.0   # bloco desativado no protótipo — mantido em 0
 
 # --- Faixas de classificação (Baixa / Média / Alta) por indicador -----------
 # Conforme especificado no Apêndice A e nos parâmetros fornecidos pela equipe.

@@ -32,12 +32,12 @@ Abra o endereço indicado no terminal (geralmente `http://localhost:8501`).
    basta reescrever as funções desse arquivo com os conectores reais** — as
    assinaturas de saída (colunas) já são as esperadas por `pipeline.py`.
 
-2. **Bloco 3 (Governança) desativado.** Por instrução explícita, o
-   indicador de sobreposição com Programa Mananciais / PSA Mananciais /
-   APP-OIDA 2026 **não foi implementado**. O AHP final combina apenas o
-   Bloco 1 (Resiliência Hidrológica) e o Bloco 2 (Uso do Solo e
+2. **Bloco 3 (Instrumentos de Gestão Territorial Preexistentes) desativado.** 
+   Por instrução explícita, o indicador de sobreposição com Programa Mananciais / 
+   PSA Mananciais / APP-OIDA 2026 **não foi implementado**. O AHP final combina 
+   apenas o Bloco 1 (Resiliência Hidrológica) e o Bloco 2 (Uso do Solo e
    Socioeconômico), com pesos normalizados entre os dois. Isso está
-   documentado em `config.yaml` (`governanca.incluir_bloco_3: false`) e no
+   documentado em `config.yaml` (`instrumentos_de_gestao_territorial.incluir_bloco_3:false`) e no
    próprio dashboard.
 
 3. **Classificação de "Distância de áreas urbanizadas".** O material do
@@ -72,9 +72,10 @@ Abra o endereço indicado no terminal (geralmente `http://localhost:8501`).
   - séries de precipitação do INMET (API ou download);
   - MapBiomas + GeoSampa para uso do solo e APP;
   - IPVS da Fundação SEADE por setor censitário.
-- Reativar o Bloco 3 (Governança) assim que os shapefiles do Programa
-  Mananciais, PSA Mananciais e APP-OIDA 2026 estiverem disponíveis, e
-  redistribuir os pesos do AHP entre os três blocos.
+- Reativar o Bloco 3 (Instrumentos de Gestão Territorial Preexistentes) 
+   assim que os shapefiles do Programa Mananciais, PSA Mananciais e 
+   APP-OIDA 2026 estiverem disponíveis, e redistribuir os pesos do 
+   AHP entre os três blocos.
 - Avaliar a migração da persistência de GeoJSON único para um banco
   geoespacial (ex. PostGIS), se o volume de nascentes crescer além do
   escopo do protótipo.

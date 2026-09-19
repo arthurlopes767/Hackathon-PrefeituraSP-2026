@@ -1,13 +1,13 @@
 """
-data_synthetic.py — Camada de Coleta de Dados (SUBSTITUTA SINTÉTICA)
+Camada de Coleta de Dados 
 =======================================================================
 
 IMPORTANTE — LEIA ANTES DE USAR EM PRODUÇÃO
 -----------------------------------------------------------------------
 Este módulo NÃO acessa o DataGEO, o Google Earth Engine, o INMET, o
 MapBiomas, o GeoSampa ou a Fundação SEADE. Essas integrações exigem
-credenciais (ex.: conta de serviço do GEE) e/ou downloads de bases que não
-estão disponíveis no ambiente onde este protótipo foi construído.
+credenciais e/ou downloads de bases que não estão disponíveis no 
+ambiente onde este protótipo foi construído.
 
 Para permitir que TODO o restante do pipeline (pré-processamento espacial,
 cálculo de indicadores, PCA, AHP, dashboard) seja demonstrado de ponta a
