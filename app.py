@@ -1,9 +1,17 @@
 """
-Dashboard Streamlit (Camada de Visualização)
+app.py — Dashboard Streamlit (Camada de Visualização)
 =========================================================================
 Sistema de Apoio à Decisão para Priorização da Recuperação de Nascentes
 Urbanas frente às Mudanças Climáticas — PROTÓTIPO (Hackathon Climático
 2026: Água).
+
+Lê/gera os dados via `data_synthetic.py` (ver aviso no topo daquele
+arquivo sobre a substituição das fontes oficiais), roda o pipeline em
+`pipeline.py` (SMZ -> indicadores -> PCA -> AHP) e exibe dois mapas
+interativos (Folium) com sliders para a Prefeitura simular cenários de
+priorização ajustando os pesos do AHP ao vivo.
+
+Rodar com:  streamlit run app.py
 """
 
 import folium
@@ -65,7 +73,7 @@ n_clusters = st.sidebar.slider("Nº de sub-bacias (clusters)", 2, 12, 6)
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Pesos do AHP")
 st.sidebar.caption(
-    "O Bloco 3 (Instrumentos de Gestão Territorial Preexistentes) está **desativado neste protótipo** — sem acesso "
+    "O Bloco 3 (Governança) está **desativado neste protótipo** — sem acesso "
     "aos shapefiles do Programa Mananciais / PSA Mananciais / APP-OIDA 2026. "
     "O Índice de Prioridade combina apenas Resiliência Hidrológica e Uso do "
     "Solo/Socioeconômico."
@@ -78,7 +86,7 @@ peso_uso_solo = st.sidebar.slider(
     "Uso do Solo e Socioeconômico (Bloco 2)", 0.0, 1.0,
     float(cfg["ahp"]["pesos_default"]["uso_solo_socioeconomico"]), step=0.05,
 )
-st.sidebar.caption(f"Instrumentos de Gestão Territorial Preexistentes (Bloco 3): fixo em 0.00 (desativado)")
+st.sidebar.caption(f"Governança (Bloco 3): fixo em 0.00 (desativado)")
 
 soma_pesos = peso_resiliencia + peso_uso_solo
 if soma_pesos == 0:
@@ -148,7 +156,20 @@ def cor_por_indice(valor: float) -> str:
 
 def montar_mapa(df: pd.DataFrame, coluna_indice: str, titulo_popup: str) -> folium.Map:
     centro = [df["latitude"].mean(), df["longitude"].mean()]
-    mapa = folium.Map(location=centro, zoom_start=10, tiles="CartoDB positron")
+    # Tiles gratuitos e sem chave de API (o CartoDB passou a exigir API key).
+    mapa = folium.Map(location=centro, zoom_start=10, tiles="OpenStreetMap",
+                      control_scale=True)
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/"
+              "World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri World Imagery",
+        name="Satélite (Esri)",
+    ).add_to(mapa)
+    folium.LayerControl(collapsed=True).add_to(mapa)
+    mapa.fit_bounds([
+        [df["latitude"].min(), df["longitude"].min()],
+        [df["latitude"].max(), df["longitude"].max()],
+    ])
 
     for _, row in df.iterrows():
         valor = row[coluna_indice]
@@ -254,7 +275,7 @@ with st.expander("ℹ️ Sobre a metodologia e as limitações deste protótipo"
 
 **O que foi substituído para o protótipo funcionar sem credenciais externas:**
 - Nascentes, sub-bacias, séries de NDVI, precipitação, uso do solo e IPVS são **sintéticos** (ver `data_synthetic.py`), no lugar de DataGEO, Google Earth Engine, INMET, MapBiomas, GeoSampa e Fundação SEADE.
-- O **Bloco 3 (Instrumentos de Gestão Territorial Preexistentes)** foi excluído por instrução explícita (sem acesso aos shapefiles do Programa Mananciais, PSA Mananciais e APP-OIDA 2026). O AHP roda apenas com os Blocos 1 e 2.
+- O **Bloco 3 (Governança)** foi excluído por instrução explícita (sem acesso aos shapefiles do Programa Mananciais, PSA Mananciais e APP-OIDA 2026). O AHP roda apenas com os Blocos 1 e 2.
 
 Para produção, basta substituir as funções de `data_synthetic.py` por conectores reais — o restante do pipeline (`pipeline.py`) já está pronto para consumir dados reais com a mesma estrutura.
         """
